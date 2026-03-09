@@ -1,8 +1,5 @@
 [phases.setup]
-nixPkgs = ["php", "apacheHttpd"]
-
-[phases.build]
-cmds = ["mkdir -p /tmp/apache"]
+nixPkgs = ["php"]
 
 [start]
-cmd = "php -S 0.0.0.0:$PORT"
+cmd = "php -S 0.0.0.0:$PORT -t /app"
