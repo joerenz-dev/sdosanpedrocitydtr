@@ -1,5 +1,6 @@
 <?php
     include 'db.php';
+    date_default_timezone_set('Asia/Manila');
 
     $employee_number = $_GET['employee_number']; // 🔄 move this to the top
 
@@ -68,7 +69,7 @@ if ($row = $result->fetch_assoc()) {
 
 // ✅ Extra Rule: Only AM-In exists, no lunch punches, check if >= 7 hours worked
 if (!empty($row['lunch_out']) && empty($row['lunch_in']) && empty($row['time_out'])) {
-    $timeInDT = new DateTime($row['time_in']);
+    $timeInDT = new DateTime($row['date_record'] . ' ' . $row['time_in']);
     $now = new DateTime();
     $interval = $timeInDT->diff($now);
     $hoursWorked = ($interval->days * 24) + $interval->h + ($interval->i / 60);

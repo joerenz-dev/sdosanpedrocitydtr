@@ -94,9 +94,12 @@ if ($action == 'time_in') {
         $sql = "INSERT INTO time_logs (employee_number, employee_name, date_record, time_in, status)
                 VALUES ('$employee_number', '$employee_name', '$current_date', NOW(), '$status')";
 
-        $_SESSION['message'] = $conn->query($sql)
-            ? "Time-In recorded successfully ($status)."
-            : "Error: " . $conn->error;
+        if ($conn->query($sql)) {
+            $_SESSION['status'] = 'success';
+            $_SESSION['message'] = "Time-In recorded successfully ($status).";
+        } else {
+            $_SESSION['message'] = "Error: " . $conn->error;
+        }
     }
 }
 // LUNCH OUT
@@ -125,8 +128,8 @@ elseif ($action == 'lunch_out') {
                 header('Location: DTR.php'); exit();
         }
 
-        $schedule_date = date('Y-m-d', strtotime($row['time_in']));
-        $time_in_ts = strtotime($row['time_in']);
+        $schedule_date = $row['date_record'];
+        $time_in_ts = strtotime($row['date_record'] . ' ' . $row['time_in']);
         $now = time();
 
         // Special handling for "Full" flexi
@@ -158,14 +161,17 @@ elseif ($action == 'lunch_out') {
             $_SESSION['message'] = "Lunch Out allowed only after 4 hours from allowed start time.";
         } else {
 
-            $date_record = date('Y-m-d', strtotime($row['time_in']));
+            $date_record = $row['date_record'];
             $sql = "UPDATE time_logs 
                     SET lunch_out = NOW(), date_record = '$date_record' 
                     WHERE id = '{$row['id']}'";
 
-            $_SESSION['message'] = $conn->query($sql)
-                ? "Lunch Out recorded successfully."
-                : "Error: " . $conn->error;
+            if ($conn->query($sql)) {
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = "Lunch Out recorded successfully.";
+            } else {
+                $_SESSION['message'] = "Error: " . $conn->error;
+            }
         }
     }
 }
@@ -179,7 +185,7 @@ elseif ($action == 'lunch_in') {
             : "Lunch In already recorded.";
     } else {
         $now = time();
-        $break_start = ($row && $row['lunch_out']) ? strtotime($row['lunch_out']) : null;
+        $break_start = ($row && $row['lunch_out']) ? strtotime($row['date_record'] . ' ' . $row['lunch_out']) : null;
         $break_duration = $break_start ? $now - $break_start : 0;
 
         if ($break_duration && $break_duration < 900) {
@@ -188,7 +194,7 @@ elseif ($action == 'lunch_in') {
             //$status = ($break_duration <= 2700) ? 'On Time' :
             //          (($break_duration <= 3600) ? 'On Time' : 'Late');
 
-            $date_record = $row ? date('Y-m-d', strtotime($row['time_in'])) : date('Y-m-d');
+            $date_record = $row ? $row['date_record'] : date('Y-m-d');
 
             if ($row) {
                 $sql = "UPDATE time_logs 
@@ -200,9 +206,12 @@ elseif ($action == 'lunch_in') {
                         VALUES ('$employee_number', '$employee_name', NOW(), '$date_record')";
             }
 
-            $_SESSION['message'] = $conn->query($sql)
-                ? "Lunch In recorded successfully."
-                : "Error: " . $conn->error;
+            if ($conn->query($sql)) {
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = "Lunch In recorded successfully.";
+            } else {
+                $_SESSION['message'] = "Error: " . $conn->error;
+            }
         }
     }
 }
@@ -226,22 +235,25 @@ elseif ($action == 'time_out') {
         $status = 'Present';
         $undertime_seconds = 0;
         $undertime_str = '';
-        $time_in = strtotime($row['time_in']);
-        $date_record = date('Y-m-d', $time_in); // Force to original time_in date
+        $time_in = strtotime($row['date_record'] . ' ' . $row['time_in']);
+        $date_record = $row['date_record'];
 
         if (empty($row['lunch_out']) || empty($row['lunch_in'])) {
             $sql = "UPDATE time_logs 
                     SET time_out = NOW(), status = 'Present', date_record = '$date_record'
                     WHERE id = '{$row['id']}'";
-            $_SESSION['message'] = $conn->query($sql)
-                ? "Time Out recorded (PM only)."
-                : "Error: " . $conn->error;
+            if ($conn->query($sql)) {
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = "Time Out recorded (PM only).";
+            } else {
+                $_SESSION['message'] = "Error: " . $conn->error;
+            }
         } else {
 if ($flexi == 'Full') {
     $actual_in = $time_in;
     $actual_out = $now;
 
-    $scheduled_start = strtotime(date('Y-m-d', $time_in) . ' 09:00:00');
+    $scheduled_start = strtotime($row['date_record'] . ' 09:00:00');
 
     // 1. Late if time-in > 9:00 AM
     $late = ($actual_in > $scheduled_start) ? ($actual_in - $scheduled_start) : 0;
@@ -274,8 +286,8 @@ if ($flexi == 'Full') {
     }
 } elseif ($flexi == 'Full10pm') {
                 // Compute from actual intervals, no undertime
-                $am_work = strtotime($row['lunch_out']) - strtotime($row['time_in']);
-                $pm_work = $now - strtotime($row['lunch_in']);
+                $am_work = strtotime($row['date_record'] . ' ' . $row['lunch_out']) - $time_in;
+                $pm_work = $now - strtotime($row['date_record'] . ' ' . $row['lunch_in']);
                 $total_work = $am_work + $pm_work;
 
                 if ($total_work < 28800) {
@@ -284,8 +296,8 @@ if ($flexi == 'Full') {
                     $undertime_str = formatUndertime($missing);
                 }
             } else {
-                $am_work = strtotime($row['lunch_out']) - strtotime($row['time_in']);
-                $pm_work = $now - strtotime($row['lunch_in']);
+                $am_work = strtotime($row['date_record'] . ' ' . $row['lunch_out']) - $time_in;
+                $pm_work = $now - strtotime($row['date_record'] . ' ' . $row['lunch_in']);
                 $total_work = $am_work + $pm_work;
 
                 if ($total_work < 28800) {
@@ -298,9 +310,12 @@ if ($flexi == 'Full') {
             $sql = "UPDATE time_logs 
                     SET time_out = NOW(), status = '$status', undertime = '$undertime_str', date_record = '$date_record'
                     WHERE id = '{$row['id']}'";
-            $_SESSION['message'] = $conn->query($sql)
-                ? "Time Out recorded successfully" . ($undertime_str ? " ($status: $undertime_str)" : ".")
-                : "Error: " . $conn->error;
+            if ($conn->query($sql)) {
+                $_SESSION['status'] = 'success';
+                $_SESSION['message'] = "Time Out recorded successfully" . ($undertime_str ? " ($status: $undertime_str)" : ".");
+            } else {
+                $_SESSION['message'] = "Error: " . $conn->error;
+            }
         }
     }
 }
@@ -332,7 +347,7 @@ if (time() >= $end_of_day) {
             continue;
         }
 
-        $time_in_ts = strtotime($log['time_in']);
+        $time_in_ts = strtotime($log['date_record'] . ' ' . $log['time_in']);
         $cutoff = min(time(), $end_of_day);
         $worked_seconds = 0;
 
@@ -343,13 +358,13 @@ if (time() >= $end_of_day) {
 
         // CASE 2: Has lunch_out only
         elseif (!empty($log['lunch_out']) && empty($log['lunch_in'])) {
-            $worked_seconds = strtotime($log['lunch_out']) - $time_in_ts;
+            $worked_seconds = strtotime($log['date_record'] . ' ' . $log['lunch_out']) - $time_in_ts;
         }
 
         // CASE 3: Has lunch punches but no time_out
         elseif (!empty($log['lunch_out']) && !empty($log['lunch_in'])) {
-            $am = strtotime($log['lunch_out']) - $time_in_ts;
-            $pm = $cutoff - strtotime($log['lunch_in']);
+            $am = strtotime($log['date_record'] . ' ' . $log['lunch_out']) - $time_in_ts;
+            $pm = $cutoff - strtotime($log['date_record'] . ' ' . $log['lunch_in']);
             $worked_seconds = $am + $pm;
         }
 

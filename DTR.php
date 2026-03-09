@@ -234,8 +234,8 @@ while($row = $result_stats->fetch_assoc()){
 	<?php if(isset($_SESSION['message'])): ?>
 		<script>
 		Swal.fire({
-			icon: '<?php echo $_SESSION['status'] == "success" ? "success" : "error"; ?>',
-			title: '<?php echo $_SESSION['status'] == "success" ? "Success" : "Upload Error"; ?>',
+			icon: '<?php echo $_SESSION['status'] == "success" ? "success" : "warning"; ?>',
+			title: '<?php echo $_SESSION['status'] == "success" ? "Success" : "Notice"; ?>',
 			text: '<?php echo $_SESSION['message']; ?>',
 			confirmButtonText: 'OK'
 		});
