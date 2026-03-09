@@ -1,0 +1,33 @@
+# Prevent directory listing
+Options -Indexes
+
+# Enable error pages (optional)
+# ErrorDocument 404 /sdosanpedrocitydtr/404.php
+
+# Protect configuration files (Apache 2.4+)
+<FilesMatch "^(database\.php|session\.php)$">
+    Require all denied
+</FilesMatch>
+
+# Protect database files (Apache 2.4+)
+<FilesMatch "\.(sql|db)$">
+    Require all denied
+</FilesMatch>
+
+# Enable RewriteEngine for clean URLs (optional)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /sdosanpedrocitydtr/
+    
+    # Redirect to HTTPS (uncomment if using SSL)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Prevent access to VCS metadata files
+<FilesMatch "^(\.git|\.gitignore|\.gitattributes)$">
+    Require all denied
+</FilesMatch>

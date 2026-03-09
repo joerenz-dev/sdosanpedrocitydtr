@@ -1,4 +1,4 @@
-# SDO San Pedro City Daily Time Record (DTR) System
+    # SDO San Pedro City Daily Time Record (DTR) System
 
 ## Overview
 
@@ -36,26 +36,33 @@ The SDO San Pedro City DTR System aims to:
 
 ## Installation
 
+For detailed installation instructions, please see [INSTALL.md](INSTALL.md)
+
+### Quick Start
+
 1. **Prerequisites**
    - XAMPP installed and running
-   - Web browser (Chrome, Firefox, Edge, or Safari)
+   - Apache and MySQL services started
 
-2. **Setup**
+2. **Database Setup**
    ```bash
-   # Navigate to XAMPP htdocs directory
-   cd c:\xampp\htdocs
-   
-   # Clone or place the project files
-   # The project folder should be named: sdosanpedrocitydtr
+   # Import database schema using phpMyAdmin
+   # Navigate to: http://localhost/phpmyadmin
+   # Import: database/schema.sql
    ```
 
-3. **Database Configuration**
-   - Import the database schema (if provided)
-   - Update database connection settings in the configuration file
+3. **Configure Database**
+   - Verify settings in `config/database.php`
+   - Default: host=localhost, user=root, pass=(empty)
 
-4. **Access the Application**
-   - Open your web browser
-   - Navigate to: `http://localhost/sdosanpedrocitydtr`
+4. **Access the System**
+   - Landing page: `http://localhost/sdosanpedrocitydtr/`
+   - Login page: `http://localhost/sdosanpedrocitydtr/login.php`
+   
+5. **Default Login Credentials**
+   - Email: `admin@sdosanpedrocity.edu.ph`
+   - Password: `admin123`
+   - **⚠️ Change default password after first login!**
 
 ## Usage
 
@@ -83,17 +90,33 @@ This system is developed in accordance with:
 
 ```
 sdosanpedrocitydtr/
-├── README.md
-├── index.php
 ├── config/
-├── includes/
-├── assets/
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── modules/
-└── database/
+│   ├── database.php       # Database configuration & PDO connection
+│   └── session.php        # Session management & authentication
+├── database/
+│   └── schema.sql         # Database schema with tables & default data
+├── img/
+│   └── feat coming soon.png
+├── index.php              # Landing page
+├── login.php              # User authentication
+├── logout.php             # Logout handler
+├── dashboard.php          # User dashboard with DTR overview
+├── record-dtr.php         # DTR recording form
+├── README.md              # Project documentation
+└── INSTALL.md             # Installation guide
 ```
+
+## Database Schema
+
+The system uses MySQL with the following main tables:
+
+- **users** - Employee accounts and authentication
+- **dtr_records** - Daily time record entries
+- **leave_requests** - Leave application management
+- **activity_logs** - System activity tracking
+- **settings** - System configuration
+
+See `database/schema.sql` for complete schema details.
 
 ## Support
 
