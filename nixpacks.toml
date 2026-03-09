@@ -1,4 +1,8 @@
 [phases.setup]
-nixPkgs = ["php", "php83Extensions.mysqli", "apacheHttpd"]
+nixPkgs = ["php", "apacheHttpd"]
+
+[phases.build]
+cmds = ["mkdir -p /tmp/apache"]
+
 [start]
-cmd = "apache2 -D FOREGROUND"
+cmd = "php -S 0.0.0.0:$PORT"
