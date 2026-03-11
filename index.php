@@ -106,7 +106,7 @@
             <img class="popup-logo" src="frontpage-image/SDO Sanpedro Logo.png" alt="SDO San Pedro City Logo">
             <h2>SDO San Pedro City DTR System</h2>
             <p>Click the button below to be redirected to the <strong>Work From Home (WFH) portal</strong> of SDO San Pedro City.</p>
-            <a class="popup-btn" href="https://wfh-sdospc.com/wfh-sdospc/login.php" target="_blank" rel="noopener noreferrer">
+            <a class="popup-btn" href="https://wfh-sdospc.com/login.php" target="_blank" rel="noopener noreferrer">
                 wfh-sdospc
             </a>
             <button class="close-btn" onclick="document.getElementById('wfh-popup').style.display='none'">
