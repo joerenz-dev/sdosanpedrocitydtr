@@ -98,7 +98,7 @@
     </style>
 </head>
 <body>
-    <img src="img/feat coming soon.png" alt="SDO San Pedro City DTR System">
+    <img src="img/feature-coming-soon.png" alt="SDO San Pedro City DTR System">
 
     <!-- WFH Redirect Popup -->
     <div id="wfh-popup">
