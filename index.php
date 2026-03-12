@@ -120,7 +120,7 @@
                 <img src="img/sdoClick.png" alt="sdoclick logo" class="sdoclick">
             </div>
             <h2>SDO San Pedro City Click Time </h2>
-            <p>Click the button below to be redirected to the <strong>Work From Home (WFH) Click time portal</strong> of SDO San Pedro City.</p>
+            <p>Click the button below to be redirected to the <strong>Work From Home (WFH) Click Time portal</strong> of SDO San Pedro City.</p>
             <a class="popup-btn" href="https://wfh-sdospc.com/login.php" target="_blank" rel="noopener noreferrer">
                 Click Time
             </a>
