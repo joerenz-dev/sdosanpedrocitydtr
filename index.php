@@ -17,7 +17,8 @@
             overflow: hidden;
         }
 
-        img {
+        /* only target the hero/background image so small logos aren't affected */
+        .hero-image {
             display: block;
             width: 100%;
             height: 100vh;
@@ -29,26 +30,50 @@
             display: flex;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            /* slightly darker overlay to make the modal and logos pop */
+            background: rgba(0, 0, 0, 0.68);
             z-index: 999;
             justify-content: center;
             align-items: center;
         }
 
         #wfh-popup .popup-box {
-            background: #fff;
+            /* slightly translucent white with subtle blur */
+            background: rgba(255,255,255,0.92);
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
             border-radius: 16px;
             padding: 40px 36px 32px;
             max-width: 420px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            border: 1px solid rgba(0,0,0,0.06);
             font-family: 'Century Gothic', Arial, sans-serif;
         }
 
-        #wfh-popup .popup-box img.popup-logo {
-            height: 64px;
-            margin-bottom: 16px;
+        /* logo row inside popup: two logos side-by-side */
+        #wfh-popup .logo-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        #wfh-popup .logo-row img {
+            max-height: 72px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            transition: transform 180ms ease, filter 180ms ease; 
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
+        }
+
+        /* slightly emphasize the sdoclick logo */
+        #wfh-popup .logo-row img.sdoclick {
+            transform: scale(1.06);
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.22));
         }
 
         #wfh-popup .popup-box h2 {
@@ -81,37 +106,25 @@
             opacity: 0.88;
         }
 
-        #wfh-popup .close-btn {
-            display: block;
-            margin-top: 16px;
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        #wfh-popup .close-btn:hover {
-            color: #444;
-        }
+        /* modal has no close button by design (persistent modal) */
     </style>
 </head>
 <body>
-    <img src="img/feature-coming-soon.png" alt="SDO San Pedro City DTR System">
+    <img class="hero-image" src="img/indexbg.png" alt="SDO San Pedro City DTR System">
 
     <!-- WFH Redirect Popup -->
     <div id="wfh-popup">
         <div class="popup-box">
-            <img class="popup-logo" src="frontpage-image/SDO Sanpedro Logo.png" alt="SDO San Pedro City Logo">
-            <h2>SDO San Pedro City DTR System</h2>
-            <p>Click the button below to be redirected to the <strong>Work From Home (WFH) portal</strong> of SDO San Pedro City.</p>
+            <div class="logo-row">
+                <img src="frontpage-image/SDO Sanpedro Logo.png" alt="SDO San Pedro City Logo">
+                <img src="img/sdoClick.png" alt="sdoclick logo" class="sdoclick">
+            </div>
+            <h2>SDO San Pedro City Click Time </h2>
+            <p>Click the button below to be redirected to the <strong>Work From Home (WFH) Click time portal</strong> of SDO San Pedro City.</p>
             <a class="popup-btn" href="https://wfh-sdospc.com/login.php" target="_blank" rel="noopener noreferrer">
-                wfh-sdospc
+                Click Time
             </a>
-            <button class="close-btn" onclick="document.getElementById('wfh-popup').style.display='none'">
-                Dismiss
-            </button>
+            <!-- Dismiss button removed so modal stays persistent -->
         </div>
     </div>
 </body>
