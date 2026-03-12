@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDO San Pedro City DTR System</title>
+    <title>SDO San Pedro City Click Time</title>
     <style>
         * {
             margin: 0;
